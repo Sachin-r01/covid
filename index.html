@@ -48,13 +48,11 @@
     }
 
     /* Overlay for readability */
-    #chatBox::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.75);
-      z-index: 0;
-    }
+   .btn-container {
+  z-index: 5;
+  position: relative;
+}
+
 
     .chat {
       margin: 10px 0;
@@ -141,28 +139,31 @@
     }
 
     function askNext() {
-      if (current < questions.length) {
-        addMessage(questions[current], 'bot');
+  if (current < questions.length) {
+    addMessage(questions[current], 'bot');
 
-        const btnDiv = document.createElement('div');
-        btnDiv.className = 'btn-container';
+    const btnDiv = document.createElement('div');
+    btnDiv.className = 'btn-container';
+    btnDiv.style.zIndex = '3'; // Ensure it's above overlay
 
-        const yesBtn = document.createElement('button');
-        yesBtn.innerText = 'Yes';
-        yesBtn.onclick = () => answerQuestion(1);
+    const yesBtn = document.createElement('button');
+    yesBtn.innerText = 'Yes';
+    yesBtn.addEventListener('click', () => answerQuestion(1));
 
-        const noBtn = document.createElement('button');
-        noBtn.innerText = 'No';
-        noBtn.onclick = () => answerQuestion(0);
+    const noBtn = document.createElement('button');
+    noBtn.innerText = 'No';
+    noBtn.addEventListener('click', () => answerQuestion(0));
 
-        btnDiv.appendChild(yesBtn);
-        btnDiv.appendChild(noBtn);
-        chatBox.appendChild(btnDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      } else {
-        submitAnswers();
-      }
-    }
+    btnDiv.appendChild(yesBtn);
+    btnDiv.appendChild(noBtn);
+
+    chatBox.appendChild(btnDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  } else {
+    submitAnswers();
+  }
+}
+
 
     function answerQuestion(val) {
       answers[symptoms[current]] = val;
@@ -179,7 +180,7 @@
     }
 
     function submitAnswers() {
-      fetch('https://covid-chatbot-backend-production-0abf.up.railway.app', {
+fetch('https://covid-chatbot-backend-production-0abf.up.railway.app/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(answers)
