@@ -180,7 +180,7 @@
     }
 
     function submitAnswers() {
-fetch('https://covid-chatbot-backend-production-0abf.up.railway.app/predict', {
+fetch('https://your-new-backend-url.onrender.com/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(answers)
